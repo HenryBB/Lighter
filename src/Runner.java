@@ -147,6 +147,9 @@ public class Runner extends BasicGame {
 			g.setColor(new Color(1f, 1f, 0f, .8f));
 			g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 		}
+		g.setColor(new Color(1f,1f,0f,.5f));
+		g.fillOval(l.location.x-15, l.location.y-15, 30, 30);
+
 
 //		 for (Ray ray : rays) {
 //		 Line2D l2d = ray.line;
