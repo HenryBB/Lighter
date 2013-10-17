@@ -43,7 +43,7 @@ public class Runner extends BasicGame {
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		g.setColor(Color.blue);
+		g.setColor(Color.white);
 		g.fillRect(0, 0, 600, 600);
 		for (Obstructable o : obs) {
 			g.setColor(Color.black);
@@ -126,7 +126,7 @@ public class Runner extends BasicGame {
 			int rayIndexA = (4*i+a);
 			int rayIndexB = (4*i+b);
 			
-			g.setColor(new Color(.2f, .2f, .2f, .5f));
+			g.setColor(new Color(0f, 0f, 0f, 1f));
 			g.fill(new Polygon(new float[] { (float) o.getCorners()[a].getX(),
 					(float) o.getCorners()[a].getY(),
 					(float) o.getCorners()[b].getX(),
@@ -135,7 +135,7 @@ public class Runner extends BasicGame {
 					(float) rays.get(rayIndexB).line.getY2(),
 					(float) rays.get(rayIndexA).line.getX2(),
 					(float) rays.get(rayIndexA).line.getY2() }));
-			g.setColor(new Color(.2f, .2f, .2f, 1f));
+			g.setColor(new Color(0f, 0f, 0f, 1f));
 			g.fill(new Polygon(new float[] { (float) o.getCorners()[0].getX(),
 					(float) o.getCorners()[0].getY(),
 					(float) o.getCorners()[1].getX(),
