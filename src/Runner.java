@@ -20,7 +20,7 @@ public class Runner extends BasicGame {
 
 	public Runner(String title) {
 		super(title);
-		System.out.println("wop");
+		System.out.println("wop2");
 		// TODO Auto-generated constructor stub
 	}
 
