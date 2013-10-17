@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="/Users/Burmeister-BrownH/Downloads/zlwjgl-2.9.0/zslick/lib/slick.jar"/>
-	<classpathentry kind="lib" path="/Users/Burmeister-BrownH/Downloads/zlwjgl-2.9.0/zslick/lib/lwjgl.jar">
+	<classpathentry kind="lib" path="C:/Users/Yakman123/Documents/Lighter 3rd party/lwjgl.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Yakman123/Documents/Lighter 3rd party/slick.jar">
 		<attributes>
 			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/Burmeister-BrownH/Downloads/zlwjgl-2.9.0/native/macosx"/>
 		</attributes>
