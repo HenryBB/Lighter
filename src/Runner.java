@@ -141,6 +141,8 @@ public class Runner extends BasicGame {
 					(float) o.getCorners()[3].getY(),
 					(float) o.getCorners()[2].getX(),
 					(float) o.getCorners()[2].getY() }));
+			g.setColor(new Color(1f,1f,0f,.5f));
+			g.fillOval(l.location.x-15, l.location.y-15, 30, 30);
 		}
 
 //		 for (Ray ray : rays) {
