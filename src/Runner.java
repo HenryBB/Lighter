@@ -68,8 +68,8 @@ public class Runner extends BasicGame {
 
 		}
 
-		g.setColor(Color.red);
-		for (Obstructable o : obs) {
+		for (int i=0;i<obs.size();i++) {
+			Obstructable o =obs.get(i);
 			int a = 0, b = 0;
 			if (l.location.x >= o.getRect().getMinX()
 					&& l.location.x <= o.getRect().getMaxX()
@@ -123,15 +123,18 @@ public class Runner extends BasicGame {
 				b = 0;
 			}
 
+			int rayIndexA = (4*i+a);
+			int rayIndexB = (4*i+b);
+			
 			g.setColor(new Color(.2f, .2f, .2f, .5f));
 			g.fill(new Polygon(new float[] { (float) o.getCorners()[a].getX(),
 					(float) o.getCorners()[a].getY(),
 					(float) o.getCorners()[b].getX(),
 					(float) o.getCorners()[b].getY(),
-					(float) rays.get(b).line.getX2(),
-					(float) rays.get(b).line.getY2(),
-					(float) rays.get(a).line.getX2(),
-					(float) rays.get(a).line.getY2() }));
+					(float) rays.get(rayIndexB).line.getX2(),
+					(float) rays.get(rayIndexB).line.getY2(),
+					(float) rays.get(rayIndexA).line.getX2(),
+					(float) rays.get(rayIndexA).line.getY2() }));
 			g.setColor(new Color(.2f, .2f, .2f, 1f));
 			g.fill(new Polygon(new float[] { (float) o.getCorners()[0].getX(),
 					(float) o.getCorners()[0].getY(),
@@ -141,6 +144,8 @@ public class Runner extends BasicGame {
 					(float) o.getCorners()[3].getY(),
 					(float) o.getCorners()[2].getX(),
 					(float) o.getCorners()[2].getY() }));
+			g.setColor(new Color(1f, 1f, 0f, .8f));
+			g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 		}
 
 //		 for (Ray ray : rays) {
