@@ -1,13 +1,23 @@
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Line2D.Float;
 
 public class Obstructable {
 	Point2D[] vertices;
 	Line2D[] lines;
 
-	public Obstructable(Point2D[] points,Line2D[] lines) {
+	public Obstructable(Point2D[] points) {
 		vertices = points;
-		this.lines = lines;
+		this.lines = new Line2D[points.length];
+		for (int i=0;i<points.length;i++)
+		{
+			Line2D line = null;
+			if (i<points.length-1)
+				line = new Line2D.Float(points[i], points[i+1]);
+			else
+				line = new Line2D.Float(points[i],points[0]);
+			this.lines[i]=line;
+		}
 	}
 
 	public Point2D[] getVertices() {
@@ -16,7 +26,7 @@ public class Obstructable {
 	public Line2D[] getLines() {
 		return lines;
 	}
-	
+		
 	public Point2D rayIntersectPoint(Ray ray) {
 		Point2D intersectionPoint = null;
 		//check if there is no possibility for the line can intersect

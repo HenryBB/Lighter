@@ -46,118 +46,72 @@ public class Runner extends BasicGame {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, 600, 600);
 		for (Obstructable o : obs) {
+			ArrayList<Double> coords = new ArrayList<Double>();
+			for (int i = 0; i < o.getVertices().length; i++) {
+				coords.add(o.getVertices()[i].getX());
+				coords.add(o.getVertices()[i].getY());
+			}
 			g.setColor(Color.black);
-			g.drawRect(o.x, o.y, o.width, o.height);
+			for (Line2D l2d : o.getLines()) {
+				g.drawLine((float) l2d.getX1(), (float) l2d.getY1(),
+						(float) l2d.getX2(), (float) l2d.getY2());
+			}
+
+			
+			Polygon poly = new Polygon();
+			for (Point2D p2d : o.getVertices())
+				poly.addPoint((float) p2d.getX(), (float) p2d.getY());
+			g.setColor(Color.black);
+			g.fill(poly);
+			int index = 1;
+			g.setColor(Color.red);
+			for (Point2D p : o.getVertices()) {
+				g.drawString(index + "", (float) p.getX(), (float) p.getY());
+				index++;
+			}
+			
 		}
 
+		g.setColor(Color.black);
+		g.drawString("Left click on white space to add vertex...", 30, 100);
+		g.drawString("Right click to make the shape from clicked vertices...", 30, 200);
+		g.drawString("Middle click to clear the obstructables list...", 30, 300);
+		g.drawString("Do not cross rays or it will look bad :P", 30, 400);
+		
 		ArrayList<Ray> rays = new ArrayList<Ray>();
 		Line2D l1 = new Line2D.Float();
 		for (Obstructable o : obs) {
-			rays.add(new Ray(new Line2D.Float(l.location.x, l.location.y,
-					(o.x - l.location.x) * 100 + o.x, (o.y - l.location.y)
-							* 100 + o.y)));
-			rays.add(new Ray(new Line2D.Float(l.location.x, l.location.y,
-					((o.x + o.width) - l.location.x) * 100 + o.x + o.width,
-					(o.y - l.location.y) * 100 + o.y)));
-			rays.add(new Ray(new Line2D.Float(l.location.x, l.location.y,
-					(o.x - l.location.x) * 100 + o.x,
-					((o.y + o.height) - l.location.y) * 100 + o.y + o.height)));
-			rays.add(new Ray(new Line2D.Float(l.location.x, l.location.y,
-					((o.x + o.width) - l.location.x) * 100 + o.x + o.width,
-					((o.y + o.height) - l.location.y) * 100 + o.y + o.height)));
+			for (Point2D vertex : o.getVertices()) {
+				Ray ray = new Ray(new Point2D.Float(l.location.x, l.location.y));
+				ray.setTip(new Point2D.Float(
+						(float) ((vertex.getX() - l.location.x) * 100 + vertex
+								.getX()),
+						(float) ((vertex.getY() - l.location.y) * 100 + vertex
+								.getY())));
+				rays.add(ray);
+
+			}
+			for (Ray r : rays) {
+				g.setColor(Color.black);
+				g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
+						(float) r.tip.getX(), (float) r.tip.getY());
+			}
 
 		}
 
-		for (int i=0;i<obs.size();i++) {
-			Obstructable o =obs.get(i);
-			int a = 0, b = 0;
-			if (l.location.x >= o.getRect().getMinX()
-					&& l.location.x <= o.getRect().getMaxX()
-					&& l.location.y >= o.getRect().getMaxY()) {
-				a = 3;
-				b = 2;
-
-			}
-			if (l.location.x >= o.getRect().getMinX()
-					&& l.location.x <= o.getRect().getMaxX()
-					&& l.location.y <= o.getRect().getMinY()) {
-				a = 1;
-				b = 0;
-
-			}
-			if (l.location.y >= o.getRect().getMinY()
-					&& l.location.y <= o.getRect().getMaxY()
-					&& l.location.x <= o.getRect().getMinX()) {
-				a = 2;
-				b = 0;
-			}
-			if (l.location.y >= o.getRect().getMinY()
-					&& l.location.y <= o.getRect().getMaxY()
-					&& l.location.x >= o.getRect().getMaxX()) {
-				a = 3;
-				b = 1;
-			}
-			if (l.location.y >= o.getRect().getMaxY()
-					&& l.location.x >= o.getRect().getMaxX()) {
-				a = 2;
-				b = 1;
-			}
-			if (l.location.y >= o.getRect().getMaxY()
-					&& l.location.x <= o.getRect().getMinX()) {
-				a = 3;
-				b = 0;
-			}
-			if (l.location.y >= o.getRect().getMaxY()
-					&& l.location.x <= o.getRect().getMinX()) {
-				a = 3;
-				b = 0;
-			}
-			if (l.location.y <= o.getRect().getMinY()
-					&& l.location.x <= o.getRect().getMinX()) {
-				a = 2;
-				b = 1;
-			}
-			if (l.location.y <= o.getRect().getMinY()
-					&& l.location.x >= o.getRect().getMaxX()) {
-				a = 3;
-				b = 0;
-			}
-
-			int rayIndexA = (4*i+a);
-			int rayIndexB = (4*i+b);
-			
-			g.setColor(new Color(0f, 0f, 0f, 1f));
-			g.fill(new Polygon(new float[] { (float) o.getCorners()[a].getX(),
-					(float) o.getCorners()[a].getY(),
-					(float) o.getCorners()[b].getX(),
-					(float) o.getCorners()[b].getY(),
-					(float) rays.get(rayIndexB).line.getX2(),
-					(float) rays.get(rayIndexB).line.getY2(),
-					(float) rays.get(rayIndexA).line.getX2(),
-					(float) rays.get(rayIndexA).line.getY2() }));
-			g.setColor(new Color(0f, 0f, 0f, 1f));
-			g.fill(new Polygon(new float[] { (float) o.getCorners()[0].getX(),
-					(float) o.getCorners()[0].getY(),
-					(float) o.getCorners()[1].getX(),
-					(float) o.getCorners()[1].getY(),
-					(float) o.getCorners()[3].getX(),
-					(float) o.getCorners()[3].getY(),
-					(float) o.getCorners()[2].getX(),
-					(float) o.getCorners()[2].getY() }));
-			g.setColor(new Color(1f, 1f, 0f, .8f));
-			g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
-		}
-		g.setColor(new Color(1f,1f,0f,.5f));
-		g.fillOval(l.location.x-15, l.location.y-15, 30, 30);
-
-
-//		 for (Ray ray : rays) {
-//		 Line2D l2d = ray.line;
-//		 g.setColor(Color.white);
-//		 g.drawLine((float) l2d.getX1(), (float) l2d.getY1(),
-//		 (float) l2d.getX2(), (float) l2d.getY2());
-//		 }
+		g.setColor(new Color(1f, 1f, 0f, .8f));
+		g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 	}
+
+	// g.setColor(new Color(1f,1f,0f,.5f));
+	// g.fillOval(l.location.x-15, l.location.y-15, 30, 30);
+
+	// for (Ray ray : rays) {
+	// Line2D l2d = ray.line;
+	// g.setColor(Color.white);
+	// g.drawLine((float) l2d.getX1(), (float) l2d.getY1(),
+	// (float) l2d.getX2(), (float) l2d.getY2());
+	// }
 
 	// Returns 1 if the lines intersect, otherwise 0. In addition, if the lines
 	// intersect the intersection point may be stored in the floats i_x and i_y.
@@ -167,7 +121,6 @@ public class Runner extends BasicGame {
 		// TODO Auto-generated method stub
 		l = new Light();
 		lights.add(l);
-		// obs.add(new Obstructable(0, 0, 600, 600));
 	}
 
 	@Override
@@ -176,25 +129,36 @@ public class Runner extends BasicGame {
 		l.setLocation(new Point(in.getAbsoluteMouseX(), in.getAbsoluteMouseY()));
 	}
 
+	ArrayList<Point2D> pressedPoints = new ArrayList<Point2D>();
+
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) {
-			pressedPoint.setLocation(x, y);
+			pressedPoints.add(new Point2D.Float(x, y));
+		} else if (button == 1 && pressedPoints.size() > 2) {
+			float[] verts = new float[pressedPoints.size()];
+			obs.add(new Obstructable(convertListToArray(pressedPoints)));
+			pressedPoints.clear();
 		}
+		else if (button == 2)
+		{
+			obs.clear();
+		}
+
+	}
+
+	public Point2D[] convertListToArray(ArrayList<Point2D> pts) {
+		Point2D[] array = new Point2D[pts.size()];
+		for (int i = 0; i < pts.size(); i++) {
+			array[i] = pts.get(i);
+		}
+		return array;
+
 	}
 
 	@Override
 	public void mouseReleased(int button, int x, int y) {
-		if (button == 0) {
-			if (pressedPoint != null) {
-				if ((int) (x - pressedPoint.getX()) > 0
-						&& (int) (y - pressedPoint.getY()) > 0)
-					obs.add(new Obstructable((int) pressedPoint.getX(),
-							(int) pressedPoint.getY(), (int) (x - pressedPoint
-									.getX()), (int) (y - pressedPoint.getY())));
-				// }
-			}
-		}
+
 	}
 
 }
