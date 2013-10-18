@@ -1,9 +1,6 @@
 import java.awt.Point;
-import java.awt.Shape;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 
 import javax.swing.JFrame;
@@ -45,6 +42,7 @@ public class Runner extends BasicGame {
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
 		g.setColor(Color.white);
 		g.fillRect(0, 0, 600, 600);
+
 		for (Obstructable o : obs) {
 			ArrayList<Double> coords = new ArrayList<Double>();
 			for (int i = 0; i < o.getVertices().length; i++) {
@@ -57,7 +55,6 @@ public class Runner extends BasicGame {
 						(float) l2d.getX2(), (float) l2d.getY2());
 			}
 
-			
 			Polygon poly = new Polygon();
 			for (Point2D p2d : o.getVertices())
 				poly.addPoint((float) p2d.getX(), (float) p2d.getY());
@@ -69,17 +66,35 @@ public class Runner extends BasicGame {
 				g.drawString(index + "", (float) p.getX(), (float) p.getY());
 				index++;
 			}
-			
+
 		}
 
 		g.setColor(Color.black);
 		g.drawString("Left click on white space to add vertex...", 30, 100);
-		g.drawString("Right click to make the shape from clicked vertices...", 30, 200);
+		g.drawString("Right click to make the shape from clicked vertices...",
+				30, 200);
 		g.drawString("Middle click to clear the obstructables list...", 30, 300);
 		g.drawString("Do not cross rays or it will look bad :P", 30, 400);
-		
+
 		ArrayList<Ray> rays = new ArrayList<Ray>();
-		Line2D l1 = new Line2D.Float();
+		// upper left ray
+		Ray r1 = new Ray(new Point2D.Float(l.location.x, l.location.y));
+		// upper right ray
+		Ray r2 = new Ray(new Point2D.Float(l.location.x, l.location.y));
+		// lower left ray
+		Ray r3 = new Ray(new Point2D.Float(l.location.x, l.location.y));
+		// lower right ray
+		Ray r4 = new Ray(new Point2D.Float(l.location.x, l.location.y));
+
+		r1.setTip(new Point2D.Float(0, 0));
+		r2.setTip(new Point2D.Float(600, 0));
+		r3.setTip(new Point2D.Float(0, 600));
+		r4.setTip(new Point2D.Float(600, 600));
+		rays.add(r1);
+		rays.add(r2);
+		rays.add(r3);
+		rays.add(r4);
+
 		for (Obstructable o : obs) {
 			for (Point2D vertex : o.getVertices()) {
 				Ray ray = new Ray(new Point2D.Float(l.location.x, l.location.y));
@@ -97,6 +112,25 @@ public class Runner extends BasicGame {
 						(float) r.tip.getX(), (float) r.tip.getY());
 			}
 
+		}
+
+		ArrayList<Point2D> intersections = new ArrayList<Point2D>();
+		for (Obstructable o : obs) {
+			ArrayList<Point2D> obsInters = new ArrayList<Point2D>();
+			for (Line2D l : o.lines)
+				for (Ray r : rays) {
+					Point2D intersection = VectorUtil.findIntersection(
+							new Line2D.Float(r.origin, r.tip), l);
+					obsInters.add(intersection);
+				}
+			for (Point2D p : obsInters) {
+				intersections.add(p);
+			}
+
+		}
+		g.setColor(Color.blue);
+		for (Point2D p : intersections) {
+			g.fillOval((float) p.getX() - 2f, (float) p.getY() - 2f, 4, 4);
 		}
 
 		g.setColor(new Color(1f, 1f, 0f, .8f));
@@ -121,6 +155,7 @@ public class Runner extends BasicGame {
 		// TODO Auto-generated method stub
 		l = new Light();
 		lights.add(l);
+
 	}
 
 	@Override
@@ -136,12 +171,9 @@ public class Runner extends BasicGame {
 		if (button == 0) {
 			pressedPoints.add(new Point2D.Float(x, y));
 		} else if (button == 1 && pressedPoints.size() > 2) {
-			float[] verts = new float[pressedPoints.size()];
 			obs.add(new Obstructable(convertListToArray(pressedPoints)));
 			pressedPoints.clear();
-		}
-		else if (button == 2)
-		{
+		} else if (button == 2) {
 			obs.clear();
 		}
 

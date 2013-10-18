@@ -1,6 +1,7 @@
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
-import java.awt.geom.Line2D.Float;
+
+import org.newdawn.slick.geom.Polygon;
 
 public class Obstructable {
 	Point2D[] vertices;
@@ -19,12 +20,19 @@ public class Obstructable {
 			this.lines[i]=line;
 		}
 	}
-
+	
 	public Point2D[] getVertices() {
 		return vertices;
 	}
 	public Line2D[] getLines() {
 		return lines;
+	}
+	public Polygon getShape()
+	{
+		Polygon p = new Polygon();
+		for (Point2D p2d : getVertices())
+			p.addPoint((float) p2d.getX(), (float) p2d.getY());
+		return new Polygon();
 	}
 		
 	public Point2D rayIntersectPoint(Ray ray) {
@@ -46,6 +54,7 @@ public class Obstructable {
 			//the intersection point is p + tr
 			double denominator = VectorUtil.cross(ray.getTip(),l.getP2());
 			if (denominator !=0) { //lines are not parallel
+				
 				Point2D qpDif = new Point2D.Double(l.getP1().getX()-ray.getOrigin().getX(), l.getP1().getY()-ray.getOrigin().getY());
 				double numerator = VectorUtil.cross(qpDif,ray.getTip());
 				if (numerator !=0 ) { //lines are not colinear
