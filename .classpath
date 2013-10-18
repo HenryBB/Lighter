@@ -2,15 +2,11 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
-	<classpathentry kind="lib" path="C:/Users/Yakman123/Documents/GitHub/Lighter/lwjgl.jar">
+	<classpathentry kind="lib" path="lwjgl.jar">
 		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="C:/Users/Yakman123/Documents/GitHub/Lighter/Natives"/>
+			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="Lighter/Natives"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="lib" path="C:/Users/Yakman123/Documents/GitHub/Lighter/slick.jar">
-		<attributes>
-			<attribute name="org.eclipse.jdt.launching.CLASSPATH_ATTR_LIBRARY_PATH_ENTRY" value="/Users/Burmeister-BrownH/Downloads/zlwjgl-2.9.0/native/macosx"/>
-		</attributes>
-	</classpathentry>
+	<classpathentry kind="lib" path="slick.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
