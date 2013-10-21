@@ -44,26 +44,26 @@ public class Obstructable {
 		//		- both of the line's points are below the origin and the ray slope is positive
 		//		- both the line's points are
 		for (Line2D l : lines) {
-			//if (ray.getSlope()!= (l.getY2()-l.getY1())/(l.getX2()-l.getX1()) ) { //lines are not parallel
-			//Ray is represented as origin + scale*(ax,ay) or p+t(r)
-			//line is represented as point + scale*(qx,qy) or q+u(s) - for this case u is assumed to be 1
-			//t = (q - p) × s / (r × s) where x is the cross product
-			//if (r x s) is zero the lines are parallel
-			//if (q-p) x r is zero the lines are colinear
-			//if 0 <= t <= 1 the ray and line intersect, otherwise they don't.
-			//the intersection point is p + tr
-			double denominator = VectorUtil.cross(ray.getTip(),l.getP2());
-			if (denominator !=0) { //lines are not parallel
-				
-				Point2D qpDif = new Point2D.Double(l.getP1().getX()-ray.getOrigin().getX(), l.getP1().getY()-ray.getOrigin().getY());
-				double numerator = VectorUtil.cross(qpDif,ray.getTip());
-				if (numerator !=0 ) { //lines are not colinear
-					double t = numerator/denominator;
-					if ( (t>=0) && (t<=1) ) { //line and ray intersected
-						intersectionPoint = new Point2D.Double(t*ray.getTip().getX(),t*ray.getTip().getY());
+			intersectionPoint = null;
+			/*
+			This method assumes that both the ray and line segment are infinite lines.
+			If infinite lines are not parallel, they must intersect.
+			I'm solving for the intersection point, and seeing if the x is within the bounds of both the ray and line segment.
+			 */
+			double lineSlope = (l.getY2()-l.getY1())/(l.getX2()-l.getX1());
+			if (ray.getSlope()!=lineSlope) { //lines are not parallel - if the lines are colinear it should still not count as an intersection
+				//find the b in y=mx+b for both ray and line segment
+				double rayConstant = ray.getOrigin().getY() - (ray.getSlope()*ray.getOrigin().getX());
+				double lineConstant = l.getY1() - (lineSlope*l.getX1());
+				double intersectionX = (rayConstant-lineConstant)/(lineSlope-ray.getSlope());
+				//really ugly if statement I know...
+				if ( ((intersectionX>=ray.getOrigin().getX()) && (ray.getOrigin().getX()<=ray.getTip().getX())) || ((intersectionX<=ray.getOrigin().getX()) && (ray.getOrigin().getX()>ray.getTip().getX())) ) { //within the x bounds of the ray
+					double maxX = Math.max(l.getX1(), l.getX2());
+					double minX = Math.min(l.getX1(), l.getX2());
+					if ((intersectionX>=minX) && (intersectionX<=maxX)) {
+						intersectionPoint = new Point2D.Double(intersectionX,(lineSlope*intersectionX)+lineConstant);
 					}
 				}
-				
 			}
 		}
 		return intersectionPoint;
