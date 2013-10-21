@@ -27,7 +27,7 @@ public class Runner extends BasicGame {
 	 */
 	final static int windowWidth = 600;
 	final static int windowHeight = 600;
-	
+
 	JFrame frame;
 	ArrayList<Obstructable> obs = new ArrayList<Obstructable>();
 	ArrayList<Light> lights = new ArrayList<Light>();
@@ -66,12 +66,12 @@ public class Runner extends BasicGame {
 				poly.addPoint((float) p2d.getX(), (float) p2d.getY());
 			g.setColor(Color.black);
 			g.fill(poly);
-			int index = 1;
-			g.setColor(Color.red);
-			for (Point2D p : o.getVertices()) {
-				g.drawString(index + "", (float) p.getX(), (float) p.getY());
-				index++;
-			}
+			// int index = 1;
+			// g.setColor(Color.red);
+			// for (Point2D p : o.getVertices()) {
+			// g.drawString(index + "", (float) p.getX(), (float) p.getY());
+			// index++;
+			// }
 
 		}
 
@@ -96,10 +96,10 @@ public class Runner extends BasicGame {
 		r2.setTip(new Point2D.Float(600, 0));
 		r3.setTip(new Point2D.Float(0, 600));
 		r4.setTip(new Point2D.Float(600, 600));
-		rays.add(r1);
-		rays.add(r2);
-		rays.add(r3);
-		rays.add(r4);
+		// rays.add(r1);
+		// rays.add(r2);
+		// rays.add(r3);
+		// rays.add(r4);
 
 		for (Obstructable o : obs) {
 			for (Point2D vertex : o.getVertices()) {
@@ -113,7 +113,7 @@ public class Runner extends BasicGame {
 
 			}
 			for (Ray r : rays) {
-				g.setColor(Color.black);
+				g.setColor(Color.white);
 				g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
 						(float) r.tip.getX(), (float) r.tip.getY());
 			}
@@ -158,34 +158,36 @@ public class Runner extends BasicGame {
 		}
 
 		Collections.sort(rays);
+		
+		for (Ray r : rays) {
+			Polygon poly = new Polygon();
+			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
+			if (r.intersections.size() > 0)
+				poly.addPoint((float) r.intersections.get(r.intersections.size()-1).getX(),
+						(float) r.intersections.get(r.intersections.size()-1).getY());
+			else
+				poly.addPoint((float) r.tip.getX(), (float) r.tip.getY());
+			if (rays.size() > rays.indexOf(r) + 1) {
+				Ray nextRay = rays.get(rays.indexOf(r) + 1);
+				if (rays.get(rays.indexOf(r) + 1).intersections.size() > 0)
+					poly.addPoint((float) nextRay.intersections.get(0).getX(),
+							(float) nextRay.intersections.get(0).getY());
+				else
+					poly.addPoint((float) nextRay.tip.getX(),
+							(float) nextRay.tip.getY());
+				g.setColor(Color.white);
+				g.fill(poly);
+			}
+		}
+
+		g.setColor(Color.red);
 		int index = 1;
-		for (Ray r : rays)
-		{
-			Need to sort the ray list better, make the compareTo function work...
-			g.drawString(index + "", (float)r.getTip().getX(), (float)r.getTip().getY());
+		for (Ray r : rays) {
+			g.drawString(index + "",
+					(float) r.intersections.get(r.intersections.size()-1).getX(),
+					(float) r.intersections.get(r.intersections.size()-1).getY());
 			index++;
 		}
-//		for (Ray r : rays) {
-//			g.setColor(Color.black);
-//			Polygon poly = new Polygon();
-//			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
-//			if (r.intersections.size() > 0)
-//				poly.addPoint((float) r.intersections.get(0).getX(),
-//						(float) r.intersections.get(0).getY());
-//			else
-//				poly.addPoint((float) r.tip.getX(), (float) r.tip.getY());
-//			if (rays.size() > rays.indexOf(r) + 1) {
-//				Ray nextRay = rays.get(rays.indexOf(r)+1);
-//				if (rays.get(rays.indexOf(r) + 1).intersections.size() > 0)
-//					poly.addPoint((float) nextRay.intersections.get(0).getX(),
-//							(float) nextRay.intersections.get(0).getY());
-//				else
-//					poly.addPoint((float) nextRay.tip.getX(), (float) nextRay.tip.getY());
-//				g.setColor(Color.white);
-//				g.fill(poly);
-//			}
-//		}
-
 		g.setColor(new Color(1f, 1f, 0f, .8f));
 		g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 	}

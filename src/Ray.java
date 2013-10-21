@@ -2,7 +2,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 
-public class Ray implements Comparable{
+public class Ray implements Comparable<Ray>{
 	
 	Point2D tip; //the tip is an arbitrary point along the ray
 	Point2D origin;
@@ -57,10 +57,10 @@ public class Ray implements Comparable{
 	}
 	
 	@Override
-	public int compareTo(Object ray) {
+	public int compareTo(Ray ray) {
 		//a ray is greater than another ray if it's angle is greater
 		//first ray is the ray from which compareTo is being called
-		Ray r = (Ray)ray; //second ray - inputed ray
+		Ray r = ray; //second ray - inputed ray
 		int rQuadrant = r.getQuadrant();
 		if (quadrant!=rQuadrant) {
 			if (quadrant>rQuadrant) {return 1;} //the first ray is greater than the second inputed ray
