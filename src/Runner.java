@@ -25,6 +25,9 @@ public class Runner extends BasicGame {
 	/**
 	 * @param args
 	 */
+	final static int windowWidth = 600;
+	final static int windowHeight = 600;
+	
 	JFrame frame;
 	ArrayList<Obstructable> obs = new ArrayList<Obstructable>();
 	ArrayList<Light> lights = new ArrayList<Light>();
@@ -33,7 +36,7 @@ public class Runner extends BasicGame {
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Runner("Lights"));
-		app.setDisplayMode(600, 600, false);
+		app.setDisplayMode(windowWidth, windowHeight, false);
 		app.setSmoothDeltas(true);
 		app.setTargetFrameRate(80);
 		app.setShowFPS(true);
@@ -44,7 +47,7 @@ public class Runner extends BasicGame {
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
 		g.setColor(Color.black);
-		g.fillRect(0, 0, 600, 600);
+		g.fillRect(0, 0, windowWidth, windowHeight);
 
 		for (Obstructable o : obs) {
 			ArrayList<Double> coords = new ArrayList<Double>();
