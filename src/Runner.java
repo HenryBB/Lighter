@@ -2,8 +2,10 @@ import java.awt.Point;
 import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.swing.JFrame;
+
 import org.newdawn.slick.AppGameContainer;
 import org.newdawn.slick.BasicGame;
 import org.newdawn.slick.Color;
@@ -38,9 +40,10 @@ public class Runner extends BasicGame {
 		app.start();
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		g.setColor(Color.white);
+		g.setColor(Color.black);
 		g.fillRect(0, 0, 600, 600);
 
 		for (Obstructable o : obs) {
@@ -122,9 +125,27 @@ public class Runner extends BasicGame {
 					Point2D intersection = VectorUtil.findIntersection(
 							new Line2D.Float(r.origin, r.tip), l);
 					obsInters.add(intersection);
+					r.intersections.add(intersection);
 				}
 			for (Point2D p : obsInters) {
-				intersections.add(p);
+				double minX = 100000, minY = 100000, maxX = 0, maxY = 0;
+				for (Point2D vert : o.vertices) {
+					if (minX > vert.getX())
+						minX = vert.getX();
+					if (maxX < vert.getX())
+						maxX = vert.getX();
+					if (minY > vert.getY())
+						minY = vert.getY();
+					if (maxY < vert.getY())
+						maxY = vert.getY();
+				}
+				minX--;
+				maxX++;
+				minY--;
+				maxY++;
+				if (p.getX() > minX && p.getX() < maxX && p.getY() > minY
+						&& p.getY() < maxY)
+					intersections.add(p);
 			}
 
 		}
@@ -132,6 +153,35 @@ public class Runner extends BasicGame {
 		for (Point2D p : intersections) {
 			g.fillOval((float) p.getX() - 2f, (float) p.getY() - 2f, 4, 4);
 		}
+
+		Collections.sort(rays);
+		int index = 1;
+		for (Ray r : rays)
+		{
+			Need to sort the ray list better, make the compareTo function work...
+			g.drawString(index + "", (float)r.getTip().getX(), (float)r.getTip().getY());
+			index++;
+		}
+//		for (Ray r : rays) {
+//			g.setColor(Color.black);
+//			Polygon poly = new Polygon();
+//			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
+//			if (r.intersections.size() > 0)
+//				poly.addPoint((float) r.intersections.get(0).getX(),
+//						(float) r.intersections.get(0).getY());
+//			else
+//				poly.addPoint((float) r.tip.getX(), (float) r.tip.getY());
+//			if (rays.size() > rays.indexOf(r) + 1) {
+//				Ray nextRay = rays.get(rays.indexOf(r)+1);
+//				if (rays.get(rays.indexOf(r) + 1).intersections.size() > 0)
+//					poly.addPoint((float) nextRay.intersections.get(0).getX(),
+//							(float) nextRay.intersections.get(0).getY());
+//				else
+//					poly.addPoint((float) nextRay.tip.getX(), (float) nextRay.tip.getY());
+//				g.setColor(Color.white);
+//				g.fill(poly);
+//			}
+//		}
 
 		g.setColor(new Color(1f, 1f, 0f, .8f));
 		g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
