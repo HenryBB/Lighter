@@ -57,13 +57,13 @@ public class Obstructable {
 				double lineConstant = l.getY1() - (lineSlope*l.getX1());
 				double intersectionX = (rayConstant-lineConstant)/(lineSlope-ray.getSlope());
 				//really ugly if statement I know...
-				if ( ((intersectionX>=ray.getOrigin().getX())
+				if ( ((intersectionX>ray.getOrigin().getX())
 						&& (ray.getOrigin().getX()<=ray.getTip().getX())) 
-						|| ((intersectionX<=ray.getOrigin().getX()) 
+						|| ((intersectionX<ray.getOrigin().getX()) 
 								&& (ray.getOrigin().getX()>ray.getTip().getX())) ) { //within the x bounds of the ray
 					double maxX = Math.max(l.getX1(), l.getX2());
 					double minX = Math.min(l.getX1(), l.getX2());
-					if ((intersectionX>=minX) && (intersectionX<=maxX)) {
+					if ((intersectionX>minX) && (intersectionX<maxX)) {
 						intersectionPoint = new Point2D.Double(intersectionX,(lineSlope*intersectionX)+lineConstant);
 					}
 				}
