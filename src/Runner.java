@@ -27,8 +27,8 @@ public class Runner extends BasicGame {
 	 */
 	final static int windowWidth = 600;
 	final static int windowHeight = 600;
-	
-	//VARIABLES
+
+	// VARIABLES
 	ArrayList<Obstructable> obs;
 	ArrayList<Light> lights;
 
@@ -47,32 +47,34 @@ public class Runner extends BasicGame {
 			for (Obstructable o : obs) {
 				Polygon poly = new Polygon();
 				for (Point2D p : o.getVertices()) {
-					Ray r = new Ray(l.getLoc(),p);
+					Ray r = new Ray(l.getLoc(), p);
 					l.addRay(r);
-					poly.addPoint((float)p.getX(),(float)p.getY());
-					
+					poly.addPoint((float) p.getX(), (float) p.getY());
+
 					Point2D intersection = o.rayIntersection(r);
-					if (intersection!=null) {
-						if (r.origin.distanceSq(intersection)<r.origin.distanceSq(r.intersection)||(r.intersection==null)) {
+					if (intersection != null) {
+						if (r.origin.distanceSq(intersection) < r.origin
+								.distanceSq(r.intersection)
+								|| (r.intersection == null)) {
 							r.intersection = intersection;
 						}
 					}
-					
+
 				}
 				g.setColor(Color.green);
 				g.fill(poly);
 			}
 			l.sortRays();
-			for (int i=0; i<l.rays.size(); i++) {
+			for (int i = 0; i < l.rays.size(); i++) {
 				Polygon poly = new Polygon();
 				poly.addPoint();
-				if (i+1>=rays.size()) {
-					
+				if (i + 1 >= rays.size()) {
+
 				}
 			}
 			l.clearRays();
 		}
-		
+
 	}
 
 	@Override
@@ -84,10 +86,20 @@ public class Runner extends BasicGame {
 		Input in = gc.getInput();
 	}
 
-
+	
+	ArrayList<Point2D> pressedPoints = new ArrayList<Point2D>();
 	@Override
 	public void mousePressed(int button, int x, int y) {
 
+		if (button == 1) {
+			pressedPoints.add(new Point2D.Float(x, cY(y)));
+		}
+		if (button == 2 && pressedPoints.size() >= 3) {
+			Point2D[] pts = new Point2D[pressedPoints.size()];
+			Obstructable o = new Obstructable(pressedPoints.toArray(pts));
+			obs.add(o);
+			pressedPoints.clear();
+		}
 
 	}
 
