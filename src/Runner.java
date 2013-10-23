@@ -121,8 +121,7 @@ public class Runner extends BasicGame {
 			ArrayList<Point2D> obsInters = new ArrayList<Point2D>();
 			for (Line2D l : o.lines)
 				for (Ray r : rays) {
-					Point2D intersection = VectorUtil.findIntersection(
-							new Line2D.Float(r.origin, r.tip), l);
+					Point2D intersection = o.rayIntersectPoint(r);
 					obsInters.add(intersection);
 					r.intersections.add(intersection);
 				}
@@ -142,13 +141,13 @@ public class Runner extends BasicGame {
 				maxX++;
 				minY--;
 				maxY++;
-				if (p!=null && p.getX() > minX && p.getX() < maxX && p.getY() > minY
-						&& p.getY() < maxY)
+				if (p != null && p.getX() > minX && p.getX() < maxX
+						&& p.getY() > minY && p.getY() < maxY)
 					intersections.add(p);
 			}
 
 		}
-		for (Ray r : rays){
+		for (Ray r : rays) {
 			r.updateLength();
 		}
 		for (Ray r : rays) {
@@ -156,10 +155,8 @@ public class Runner extends BasicGame {
 			g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
 					(float) r.tip.getX(), (float) r.tip.getY());
 		}
-		
 
 		Collections.sort(rays);
-
 		for (Ray r : rays) {
 			Polygon poly = new Polygon();
 			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
@@ -180,12 +177,18 @@ public class Runner extends BasicGame {
 					poly.addPoint((float) nextRay.tip.getX(),
 							(float) nextRay.tip.getY());
 				g.setColor(Color.white);
+
 				g.fill(poly);
 			}
 		}
-		g.setColor(Color.blue);
-		for (Point2D p : intersections) {
-			g.fillOval((float) p.getX() - 2f, (float) p.getY() - 2f, 4, 4);
+		
+		for (Obstructable o : obs) {
+			Polygon p = new Polygon();
+			for (Point2D pt : o.vertices) {
+				p.addPoint((float) pt.getX(), (float) pt.getY());
+			}
+			g.setColor(Color.green);
+			g.fill(p);
 		}
 
 		g.setColor(new Color(1f, 1f, 0f, .8f));
