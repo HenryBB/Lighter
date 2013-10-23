@@ -107,4 +107,22 @@ public class Runner extends BasicGame {
 	public void mouseReleased(int button, int x, int y) {
 
 	}
+	
+	public float cYin(float y)
+	{
+		return windowHeight-y;
+	}
+	
+	public float cYout(float y)
+	{
+		return windowHeight-y;
+	}
+	public float cXin(float x)
+	{
+		return windowWidth-x;
+	}
+	public float cXout(float x)
+	{
+		return windowWidth-x;
+	}
 }
