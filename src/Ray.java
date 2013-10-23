@@ -7,7 +7,7 @@ public class Ray implements Comparable<Ray> {
 	Point2D origin;
 	double slope;
 	int quadrant; // 1 is ++, 2 is -+, 3 is --, 4 is +-
-	ArrayList<Point2D> intersections = new ArrayList<Point2D>();
+	Point2D intersection;
 	Obstructable obs;
 
 	public Ray(Point2D origin) {
@@ -84,13 +84,4 @@ public class Ray implements Comparable<Ray> {
 		}
 	}
 
-	public void updateLength() {
-		for (Point2D inter : intersections) {
-			if (inter != null)
-				if (inter.distance(origin) < tip.distance(origin)) {
-					tip = inter;
-				}
-		}
-		intersections.clear();
-	}
 }

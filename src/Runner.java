@@ -27,6 +27,10 @@ public class Runner extends BasicGame {
 	 */
 	final static int windowWidth = 600;
 	final static int windowHeight = 600;
+	
+	//VARIABLES
+	ArrayList<Obstructable> obs;
+	ArrayList<Light> lights;
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Runner("Lights"));
@@ -39,6 +43,36 @@ public class Runner extends BasicGame {
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
+		for (Light l : lights) {
+			for (Obstructable o : obs) {
+				Polygon poly = new Polygon();
+				for (Point2D p : o.getVertices()) {
+					Ray r = new Ray(l.getLoc(),p);
+					l.addRay(r);
+					poly.addPoint((float)p.getX(),(float)p.getY());
+					
+					Point2D intersection = o.rayIntersection(r);
+					if (intersection!=null) {
+						if (r.origin.distanceSq(intersection)<r.origin.distanceSq(r.intersection)||(r.intersection==null)) {
+							r.intersection = intersection;
+						}
+					}
+					
+				}
+				g.setColor(Color.green);
+				g.fill(poly);
+			}
+			l.sortRays();
+			for (int i=0; i<l.rays.size(); i++) {
+				Polygon poly = new Polygon();
+				poly.addPoint();
+				if (i+1>=rays.size()) {
+					
+				}
+			}
+			l.clearRays();
+		}
+		
 	}
 
 	@Override
@@ -61,5 +95,4 @@ public class Runner extends BasicGame {
 	public void mouseReleased(int button, int x, int y) {
 
 	}
-
 }
