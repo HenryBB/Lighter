@@ -28,12 +28,6 @@ public class Runner extends BasicGame {
 	final static int windowWidth = 600;
 	final static int windowHeight = 600;
 
-	JFrame frame;
-	ArrayList<Obstructable> obs = new ArrayList<Obstructable>();
-	ArrayList<Light> lights = new ArrayList<Light>();
-	Point2D pressedPoint = new Point2D.Double();
-	Light l;
-
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Runner("Lights"));
 		app.setDisplayMode(windowWidth, windowHeight, false);
@@ -43,206 +37,23 @@ public class Runner extends BasicGame {
 		app.start();
 	}
 
-	@SuppressWarnings("unchecked")
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		g.setColor(Color.black);
-		g.fillRect(0, 0, windowWidth, windowHeight);
-
-		for (Obstructable o : obs) {
-			ArrayList<Double> coords = new ArrayList<Double>();
-			for (int i = 0; i < o.getVertices().length; i++) {
-				coords.add(o.getVertices()[i].getX());
-				coords.add(o.getVertices()[i].getY());
-			}
-			g.setColor(Color.black);
-			for (Line2D l2d : o.getLines()) {
-				g.drawLine((float) l2d.getX1(), (float) l2d.getY1(),
-						(float) l2d.getX2(), (float) l2d.getY2());
-			}
-
-			Polygon poly = new Polygon();
-			for (Point2D p2d : o.getVertices())
-				poly.addPoint((float) p2d.getX(), (float) p2d.getY());
-			g.setColor(Color.black);
-			g.fill(poly);
-			// int index = 1;
-			// g.setColor(Color.red);
-			// for (Point2D p : o.getVertices()) {
-			// g.drawString(index + "", (float) p.getX(), (float) p.getY());
-			// index++;
-			// }
-
-		}
-
-		g.setColor(Color.black);
-		g.drawString("Left click on white space to add vertex...", 30, 100);
-		g.drawString("Right click to make the shape from clicked vertices...",
-				30, 200);
-		g.drawString("Middle click to clear the obstructables list...", 30, 300);
-		g.drawString("Do not cross rays or it will look bad :P", 30, 400);
-
-		ArrayList<Ray> rays = new ArrayList<Ray>();
-		// upper left ray
-		Ray r1 = new Ray(new Point2D.Float(l.location.x, l.location.y));
-		// upper right ray
-		Ray r2 = new Ray(new Point2D.Float(l.location.x, l.location.y));
-		// lower left ray
-		Ray r3 = new Ray(new Point2D.Float(l.location.x, l.location.y));
-		// lower right ray
-		Ray r4 = new Ray(new Point2D.Float(l.location.x, l.location.y));
-
-		r1.setTip(new Point2D.Float(0, 0));
-		r2.setTip(new Point2D.Float(600, 0));
-		r3.setTip(new Point2D.Float(0, 600));
-		r4.setTip(new Point2D.Float(600, 600));
-		// rays.add(r1);
-		// rays.add(r2);
-		// rays.add(r3);
-		// rays.add(r4);
-
-		for (Obstructable o : obs) {
-			for (Point2D vertex : o.getVertices()) {
-				Ray ray = new Ray(new Point2D.Float(l.location.x, l.location.y));
-				ray.setTip(new Point2D.Float(
-						(float) ((vertex.getX() - l.location.x) * 100 + vertex
-								.getX()),
-						(float) ((vertex.getY() - l.location.y) * 100 + vertex
-								.getY())));
-				ray.obs = o;
-				rays.add(ray);
-
-			}
-
-		}
-
-		ArrayList<Point2D> intersections = new ArrayList<Point2D>();
-		for (Obstructable o : obs) {
-			ArrayList<Point2D> obsInters = new ArrayList<Point2D>();
-			for (Line2D l : o.lines)
-				for (Ray r : rays) {
-					Point2D intersection = o.rayIntersectPoint(r);
-					obsInters.add(intersection);
-					r.intersections.add(intersection);
-				}
-			for (Point2D p : obsInters) {
-				double minX = 100000, minY = 100000, maxX = 0, maxY = 0;
-				for (Point2D vert : o.vertices) {
-					if (minX > vert.getX())
-						minX = vert.getX();
-					if (maxX < vert.getX())
-						maxX = vert.getX();
-					if (minY > vert.getY())
-						minY = vert.getY();
-					if (maxY < vert.getY())
-						maxY = vert.getY();
-				}
-				minX--;
-				maxX++;
-				minY--;
-				maxY++;
-				if (p != null && p.getX() > minX && p.getX() < maxX
-						&& p.getY() > minY && p.getY() < maxY)
-					intersections.add(p);
-			}
-
-		}
-		for (Ray r : rays) {
-			r.updateLength();
-		}
-		for (Ray r : rays) {
-			g.setColor(Color.white);
-			g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
-					(float) r.tip.getX(), (float) r.tip.getY());
-		}
-
-		Collections.sort(rays);
-		for (Ray r : rays) {
-			Polygon poly = new Polygon();
-			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
-			if (r.intersections.size() > 0) {
-				poly.addPoint(
-						(float) r.intersections.get(r.intersections.size() - 1)
-								.getX(),
-						(float) r.intersections.get(r.intersections.size() - 1)
-								.getY());
-			} else
-				poly.addPoint((float) r.tip.getX(), (float) r.tip.getY());
-			if (rays.size() > rays.indexOf(r) + 1) {
-				Ray nextRay = rays.get(rays.indexOf(r) + 1);
-				if (rays.get(rays.indexOf(r) + 1).intersections.size() > 0)
-					poly.addPoint((float) nextRay.intersections.get(0).getX(),
-							(float) nextRay.intersections.get(0).getY());
-				else
-					poly.addPoint((float) nextRay.tip.getX(),
-							(float) nextRay.tip.getY());
-				g.setColor(Color.white);
-
-				g.fill(poly);
-			}
-		}
-		
-		for (Obstructable o : obs) {
-			Polygon p = new Polygon();
-			for (Point2D pt : o.vertices) {
-				p.addPoint((float) pt.getX(), (float) pt.getY());
-			}
-			g.setColor(Color.green);
-			g.fill(p);
-		}
-
-		g.setColor(new Color(1f, 1f, 0f, .8f));
-		g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 	}
-
-	// g.setColor(new Color(1f,1f,0f,.5f));
-	// g.fillOval(l.location.x-15, l.location.y-15, 30, 30);
-
-	// for (Ray ray : rays) {
-	// Line2D l2d = ray.line;
-	// g.setColor(Color.white);
-	// g.drawLine((float) l2d.getX1(), (float) l2d.getY1(),
-	// (float) l2d.getX2(), (float) l2d.getY2());
-	// }
-
-	// Returns 1 if the lines intersect, otherwise 0. In addition, if the lines
-	// intersect the intersection point may be stored in the floats i_x and i_y.
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		// TODO Auto-generated method stub
-		l = new Light();
-		lights.add(l);
-
 	}
 
 	@Override
 	public void update(GameContainer gc, int arg1) throws SlickException {
 		Input in = gc.getInput();
-		l.setLocation(new Point(in.getAbsoluteMouseX(), in.getAbsoluteMouseY()));
 	}
 
-	ArrayList<Point2D> pressedPoints = new ArrayList<Point2D>();
 
 	@Override
 	public void mousePressed(int button, int x, int y) {
-		if (button == 0) {
-			pressedPoints.add(new Point2D.Float(x, y));
-		} else if (button == 1 && pressedPoints.size() > 2) {
-			obs.add(new Obstructable(convertListToArray(pressedPoints)));
-			pressedPoints.clear();
-		} else if (button == 2) {
-			obs.clear();
-		}
 
-	}
-
-	public Point2D[] convertListToArray(ArrayList<Point2D> pts) {
-		Point2D[] array = new Point2D[pts.size()];
-		for (int i = 0; i < pts.size(); i++) {
-			array[i] = pts.get(i);
-		}
-		return array;
 
 	}
 
