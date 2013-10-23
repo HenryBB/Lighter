@@ -109,13 +109,9 @@ public class Runner extends BasicGame {
 								.getX()),
 						(float) ((vertex.getY() - l.location.y) * 100 + vertex
 								.getY())));
+				ray.obs = o;
 				rays.add(ray);
 
-			}
-			for (Ray r : rays) {
-				g.setColor(Color.white);
-				g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
-						(float) r.tip.getX(), (float) r.tip.getY());
 			}
 
 		}
@@ -146,26 +142,34 @@ public class Runner extends BasicGame {
 				maxX++;
 				minY--;
 				maxY++;
-				if (p.getX() > minX && p.getX() < maxX && p.getY() > minY
+				if (p!=null && p.getX() > minX && p.getX() < maxX && p.getY() > minY
 						&& p.getY() < maxY)
 					intersections.add(p);
 			}
 
 		}
-		g.setColor(Color.blue);
-		for (Point2D p : intersections) {
-			g.fillOval((float) p.getX() - 2f, (float) p.getY() - 2f, 4, 4);
+		for (Ray r : rays){
+			r.updateLength();
 		}
+		for (Ray r : rays) {
+			g.setColor(Color.white);
+			g.drawLine((float) r.origin.getX(), (float) r.origin.getY(),
+					(float) r.tip.getX(), (float) r.tip.getY());
+		}
+		
 
 		Collections.sort(rays);
-		
+
 		for (Ray r : rays) {
 			Polygon poly = new Polygon();
 			poly.addPoint((float) r.origin.getX(), (float) r.origin.getY());
-			if (r.intersections.size() > 0)
-				poly.addPoint((float) r.intersections.get(r.intersections.size()-1).getX(),
-						(float) r.intersections.get(r.intersections.size()-1).getY());
-			else
+			if (r.intersections.size() > 0) {
+				poly.addPoint(
+						(float) r.intersections.get(r.intersections.size() - 1)
+								.getX(),
+						(float) r.intersections.get(r.intersections.size() - 1)
+								.getY());
+			} else
 				poly.addPoint((float) r.tip.getX(), (float) r.tip.getY());
 			if (rays.size() > rays.indexOf(r) + 1) {
 				Ray nextRay = rays.get(rays.indexOf(r) + 1);
@@ -179,15 +183,11 @@ public class Runner extends BasicGame {
 				g.fill(poly);
 			}
 		}
-
-		g.setColor(Color.red);
-		int index = 1;
-		for (Ray r : rays) {
-			g.drawString(index + "",
-					(float) r.intersections.get(r.intersections.size()-1).getX(),
-					(float) r.intersections.get(r.intersections.size()-1).getY());
-			index++;
+		g.setColor(Color.blue);
+		for (Point2D p : intersections) {
+			g.fillOval((float) p.getX() - 2f, (float) p.getY() - 2f, 4, 4);
 		}
+
 		g.setColor(new Color(1f, 1f, 0f, .8f));
 		g.fillOval(l.location.x - 15, l.location.y - 15, 30, 30);
 	}
