@@ -39,45 +39,27 @@ public class Runner extends BasicGame {
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		//Drawing stuff on the screen
 	}
 
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
-		//This happens at the very beginning
 	}
 
 	@Override
 	public void update(GameContainer gc, int arg1) throws SlickException {
-		//this happens every frame
+		Input in = gc.getInput();
 	}
 
 
-	ArrayList<Point2D> pressedPoints = new ArrayList<Point2D>();
 	@Override
 	public void mousePressed(int button, int x, int y) {
-		//happens when mouse button is pressed
-		if (button == 1)
-		{
-			pressedPoints.add(new Point2D.Float(x, cY(y)));
-		}
-		if (button == 2 && pressedPoints.size()>=3)
-		{
-			Point2D[] pts = new Point2D[pressedPoints.size()];
-			Obstructable o = new Obstructable(pressedPoints.toArray(pts));
-			obs.add(o);
-			pressedPoints.clear();
-		}
+
+
 	}
 
 	@Override
 	public void mouseReleased(int button, int x, int y) {
-		//happens when mouse button is released
-	}
-	
-	public float cY(float y)
-	{
-		return windowHeight-y;
+
 	}
 
 }
