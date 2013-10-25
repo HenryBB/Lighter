@@ -47,14 +47,19 @@ public class Runner extends BasicGame {
 		g.setColor(Color.black);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 		for (Light l : lights) {
+			for (Point2D p : windowObs.getVertices()) {
+				Ray windowRay = new Ray(l.getLoc(),p);
+				windowRay.intersection = p;
+				//l.addRay(windowRay);
+			}
 			for (Obstructable o : obs) {
-				Polygon poly = new Polygon();
+				Polygon ObsPoly = new Polygon();
 				for (Point2D p : o.getVertices()) {
 					Ray r = new Ray(l.getLoc(), p);
 					l.addRay(r);
-					poly.addPoint(cXout((float) p.getX()), cYout((float) p.getY()));
+					ObsPoly.addPoint(cXout((float) p.getX()), cYout((float) p.getY()));
 
-					Point2D intersection = o.rayIntersection(r);
+					Point2D intersection = o.rayIntersection1(r);
 					if (intersection != null) {
 						if (r.intersection == null) {
 							r.intersection = intersection;
@@ -66,25 +71,26 @@ public class Runner extends BasicGame {
 
 				}
 				g.setColor(Color.green);
-				g.fill(poly);
+				g.fill(ObsPoly);
 			}
 			if (onScreen(l.location)) {
 				for (Ray r : l.rays) {
 					if (r.intersection==null) {
-						r.intersection = windowObs.rayIntersection(r);
+						r.intersection = windowObs.rayIntersection1(r);
 					}
 				}
 			}
 			l.sortRays();
 			for (int i = 0; i < l.rays.size(); i++) {
+				
 				Ray r = l.ray(i);
 				
 				g.setColor(Color.blue);
 				g.drawLine(cXout((float)r.origin.getX()), cYout((float)r.origin.getY()), cXout((float)r.intersection.getX()), cYout((float)r.intersection.getY()));
 				
-				//Polygon poly = new Polygon();
-				//poly.addPoint(cXout((float)r.origin.getX()),cYout((float)r.origin.getY()));
-				//poly.addPoint(cXout((float)r.intersection.getX()),cYout((float)r.intersection.getY()));
+				Polygon poly = new Polygon();
+				poly.addPoint(cXout((float)r.origin.getX()),cYout((float)r.origin.getY()));
+				poly.addPoint(cXout((float)r.intersection.getX()),cYout((float)r.intersection.getY()));
 				Ray r2;
 				if (i + 1 >= l.rays.size()) {
 					r2 = l.ray(0);
@@ -92,8 +98,8 @@ public class Runner extends BasicGame {
 				else {
 					r2 = l.ray(i+1);
 				}
-				//poly.addPoint(cXout((float)r2.intersection.getX()),cYout((float)r2.intersection.getY()));
-				//g.setColor(Color.white);
+				poly.addPoint(cXout((float)r2.intersection.getX()),cYout((float)r2.intersection.getY()));
+				g.setColor(Color.white);
 				//g.fill(poly);
 			}
 			l.clearRays();
@@ -104,6 +110,12 @@ public class Runner extends BasicGame {
 	@Override
 	public void init(GameContainer arg0) throws SlickException {
 		lights.add(new Light(new Point2D.Float(windowWidth/2,windowHeight/2)));
+		Point2D[] testPoints = {new Point2D.Float(0,0),new Point2D.Float(0,windowHeight),new Point2D.Float(windowWidth,windowHeight),new Point2D.Float(windowWidth,0)};
+		Obstructable testObs = new Obstructable(testPoints);
+		Ray testRay = new Ray(new Point2D.Float(50,50),new Point2D.Float(51,60));
+		Point2D intersection = testObs.rayIntersection1(testRay);
+		System.out.println("=================");
+		System.out.println(intersection);
 		
 	}
 
@@ -120,11 +132,9 @@ public class Runner extends BasicGame {
 	@Override
 	public void mousePressed(int button, int x, int y) {
 		if (button == 0) {
-			System.out.println("1");
 			pressedPoints.add(new Point2D.Float(cXin(x), cYin(y)));
 		}
 		if (button == 1 && pressedPoints.size() >= 3) {
-			System.out.println("2");
 			Point2D[] pts = new Point2D[pressedPoints.size()];
 			Obstructable o = new Obstructable(pressedPoints.toArray(pts));
 			obs.add(o);
