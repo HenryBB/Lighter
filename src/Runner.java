@@ -50,7 +50,7 @@ public class Runner extends BasicGame {
 			for (Point2D p : windowObs.getVertices()) {
 				Ray windowRay = new Ray(l.getLoc(),p);
 				windowRay.intersection = p;
-				//l.addRay(windowRay);
+				l.addRay(windowRay);
 			}
 			for (Obstructable o : obs) {
 				Polygon ObsPoly = new Polygon();
@@ -58,7 +58,8 @@ public class Runner extends BasicGame {
 					Ray r = new Ray(l.getLoc(), p);
 					l.addRay(r);
 					ObsPoly.addPoint(cXout((float) p.getX()), cYout((float) p.getY()));
-
+				}
+				for (Ray r : l.rays) {
 					Point2D intersection = o.rayIntersection1(r);
 					if (intersection != null) {
 						if (r.intersection == null) {
@@ -68,7 +69,6 @@ public class Runner extends BasicGame {
 							r.intersection = intersection;
 						}
 					}
-
 				}
 				g.setColor(Color.green);
 				g.fill(ObsPoly);
@@ -139,7 +139,10 @@ public class Runner extends BasicGame {
 			Obstructable o = new Obstructable(pressedPoints.toArray(pts));
 			obs.add(o);
 			pressedPoints.clear();
-			
+		}
+		if (button==2) {
+			pressedPoints.clear();
+			obs.clear();
 		}
 
 	}
