@@ -27,9 +27,9 @@ public class Ray implements Comparable<Ray> {
 			return 2;
 		} else if ((tip.getY() <= origin.getY())
 				&& (tip.getX() > origin.getX())) {
-			return 3;
-		} else {
 			return 4;
+		} else {
+			return 3;
 		}
 	}
 
