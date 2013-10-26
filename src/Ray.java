@@ -56,8 +56,8 @@ public class Ray implements Comparable<Ray> {
 		return quadrant;
 	}
 
-	@Override
-	public int compareTo(Ray ray) {
+	//@Override
+	public int compareTo1(Ray ray) {
 		// a ray is greater than another ray if it's angle is greater
 		// first ray is the ray from which compareTo is being called
 		Ray r = ray; // second ray - inputed ray
@@ -81,6 +81,21 @@ public class Ray implements Comparable<Ray> {
 				return -1;
 			} // otherwise the first ray has a smaller slope and thus has a
 				// smaller angle
+		}
+	}
+	
+	@Override
+	public int compareTo(Ray r) {
+		double angle1 = Math.atan2(origin.getY()-tip.getY(),origin.getX()-tip.getX());
+		double angle2 = Math.atan2(r.origin.getY()-r.tip.getY(),r.origin.getX()-r.tip.getX());
+		if (angle1>angle2) {
+			return 1;
+		}
+		else if (angle1<angle2) {
+			return -1;
+		}
+		else {
+			return 0;
 		}
 	}
 
