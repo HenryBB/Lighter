@@ -53,14 +53,14 @@ public class Runner extends BasicGame {
 			for (Point2D p : windowObs.getVertices()) {
 				Ray windowRay = new Ray(l.getLoc(), p);
 				windowRay.intersection = p;
-				windowRay.obs = windowObs;
+				windowRay.obsTip = windowObs;
 				l.addRay(windowRay);
 			}
 			for (Obstructable o : obs) {
 				Polygon ObsPoly = new Polygon();
 				for (Point2D p : o.getVertices()) {
 					Ray r = new Ray(l.getLoc(), p);
-					r.obs = o;
+					r.obsTip = o;
 					l.addRay(r);
 					ObsPoly.addPoint(cXout((float) p.getX()),
 							cYout((float) p.getY()));
@@ -74,9 +74,12 @@ public class Runner extends BasicGame {
 					if (intersection != null) {
 						if (r.intersection == null) {
 							r.intersection = intersection;
-						} else if (r.origin.distanceSq(intersection) < r.origin
+							r.obsInter = o;
+						}
+						else if (r.origin.distanceSq(intersection) < r.origin
 								.distanceSq(r.intersection)) {
 							r.intersection = intersection;
+							r.obsInter = o;
 						}
 					}
 				}
@@ -85,6 +88,7 @@ public class Runner extends BasicGame {
 				for (Ray r : l.rays) {
 					if (r.intersection == null) {
 						r.intersection = windowObs.rayIntersection1(r);
+						r.obsInter = windowObs;
 					}
 				}
 			}
@@ -116,21 +120,30 @@ public class Runner extends BasicGame {
 				} else {
 					r2 = l.ray(i + 1);
 				}
-				if (r.obs == r2.obs) {
-					poly.addPoint(cXout((float) r.tip.getX()),
-							cYout((float) r.tip.getY()));
-					poly.addPoint(cXout((float) r.origin.getX()),
-							cYout((float) r.origin.getY()));
-					poly.addPoint(cXout((float) r2.tip.getX()),
-							cYout((float) r2.tip.getY()));
-				} else {
-					poly.addPoint(cXout((float) r.intersection.getX()),
-							cYout((float) r.intersection.getY()));
-					poly.addPoint(cXout((float) r.origin.getX()),
-							cYout((float) r.origin.getY()));
-					poly.addPoint(cXout((float) r2.intersection.getX()),
-							cYout((float) r2.intersection.getY()));
+				poly.addPoint(cXout((float) r.origin.getX()),
+						cYout((float) r.origin.getY()));
+				Point2D p2;
+				Point2D p3;
+				if (r.obsTip == r2.obsTip) {
+					p2 = r.tip;
+					p3 = r2.tip;
 				}
+				else if (r.obsTip == r2.obsInter) {
+					p2 = r.tip;
+					p3 = r2.intersection;
+				}
+				else if (r.obsInter == r2.obsTip) {
+					p2 = r.intersection;
+					p3 = r2.tip;
+				}
+				else {
+					p2 = r.intersection;
+					p3 = r2.intersection;
+				}
+				poly.addPoint(cXout((float) p2.getX()),
+						cYout((float) p2.getY()));
+				poly.addPoint(cXout((float) p3.getX()),
+						cYout((float) p3.getY()));
 
 				g.setColor(Color.white);
 				g.fill(poly);

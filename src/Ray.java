@@ -8,7 +8,8 @@ public class Ray implements Comparable<Ray> {
 	double slope;
 	int quadrant; // 1 is ++, 2 is -+, 3 is --, 4 is +-
 	Point2D intersection;
-	Obstructable obs;
+	Obstructable obsTip;
+	Obstructable obsInter;
 
 	public Ray(Point2D origin) {
 		this.origin = origin;
