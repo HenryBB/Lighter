@@ -65,7 +65,11 @@ public class Runner extends BasicGame {
 					ObsPoly.addPoint(cXout((float) p.getX()),
 							cYout((float) p.getY()));
 				}
-				for (Ray r : l.rays) {
+				g.setColor(Color.green);
+				g.fill(ObsPoly);
+			}
+			for (Ray r : l.rays) {
+				for (Obstructable o : obs) {
 					Point2D intersection = o.rayIntersection1(r);
 					if (intersection != null) {
 						if (r.intersection == null) {
@@ -76,8 +80,6 @@ public class Runner extends BasicGame {
 						}
 					}
 				}
-				g.setColor(Color.black);
-				g.fill(ObsPoly);
 			}
 			if (onScreen(l.location)) {
 				for (Ray r : l.rays) {
@@ -90,6 +92,7 @@ public class Runner extends BasicGame {
 			for (int i=0;i<l.rays.size();i++)
 			{
 				Ray r = l.ray(i);
+				/////////////PROBLEM HERE - RESPONSIBLE FOR RANDOM CRAHSES!!!!!!
 				if (r.origin.distanceSq(r.intersection)<r.origin.distanceSq(r.tip))
 				{
 					l.rays.remove(r);
@@ -100,11 +103,11 @@ public class Runner extends BasicGame {
 
 				Ray r = l.ray(i);
 
-//				g.setColor(Color.blue);
-//				g.drawLine(cXout((float) r.origin.getX()),
-//						cYout((float) r.origin.getY()),
-//						cXout((float) r.intersection.getX()),
-//						cYout((float) r.intersection.getY()));
+				g.setColor(Color.blue);
+				g.drawLine(cXout((float) r.origin.getX()),
+						cYout((float) r.origin.getY()),
+						cXout((float) r.intersection.getX()),
+						cYout((float) r.intersection.getY()));
 
 				Polygon poly = new Polygon();
 				Ray r2;
