@@ -75,8 +75,7 @@ public class Runner extends BasicGame {
 						if (r.intersection == null) {
 							r.intersection = intersection;
 							r.obsInter = o;
-						}
-						else if (r.origin.distanceSq(intersection) < r.origin
+						} else if (r.origin.distanceSq(intersection) < r.origin
 								.distanceSq(r.intersection)) {
 							r.intersection = intersection;
 							r.obsInter = o;
@@ -93,12 +92,15 @@ public class Runner extends BasicGame {
 				}
 			}
 			l.sortRays();
-			for (int i=0;i<l.rays.size();i++)
-			{
+			for (int i = 0; i < l.rays.size(); i++) {
 				Ray r = l.ray(i);
-				/////////////PROBLEM HERE - RESPONSIBLE FOR RANDOM CRAHSES!!!!!!
-				if (r.origin.distanceSq(r.intersection)<r.origin.distanceSq(r.tip))
-				{
+				if (r.intersection == null) {
+					r.intersection=r.origin;
+				}
+				// ///////////PROBLEM HERE - RESPONSIBLE FOR RANDOM
+				// CRAHSES!!!!!!
+				else if (r.origin.distanceSq(r.intersection) < r.origin
+						.distanceSq(r.tip)) {
 					l.rays.remove(r);
 					i--;
 				}
@@ -127,16 +129,13 @@ public class Runner extends BasicGame {
 				if (r.obsTip == r2.obsTip) {
 					p2 = r.tip;
 					p3 = r2.tip;
-				}
-				else if (r.obsTip == r2.obsInter) {
+				} else if (r.obsTip == r2.obsInter) {
 					p2 = r.tip;
 					p3 = r2.intersection;
-				}
-				else if (r.obsInter == r2.obsTip) {
+				} else if (r.obsInter == r2.obsTip) {
 					p2 = r.intersection;
 					p3 = r2.tip;
-				}
-				else {
+				} else {
 					p2 = r.intersection;
 					p3 = r2.intersection;
 				}
