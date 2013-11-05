@@ -35,6 +35,7 @@ public class Runner extends BasicGame {
 			new Point2D.Float(windowWidth, 0) };
 	Obstructable windowObs = new Obstructable(windowPoints);
 	ArrayList<Light> lights = new ArrayList<Light>();
+	boolean showObsInGreen = false;
 
 	public static void main(String[] args) throws SlickException {
 		AppGameContainer app = new AppGameContainer(new Runner("Lights"));
@@ -42,11 +43,13 @@ public class Runner extends BasicGame {
 		app.setSmoothDeltas(true);
 		app.setTargetFrameRate(80);
 		app.setShowFPS(true);
+		app.setVSync(true);
 		app.start();
 	}
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
+		
 		g.setColor(Color.black);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 		for (Light l : lights) {
@@ -65,7 +68,10 @@ public class Runner extends BasicGame {
 					ObsPoly.addPoint(cXout((float) p.getX()),
 							cYout((float) p.getY()));
 				}
-				g.setColor(Color.green);
+				if (showObsInGreen)
+					g.setColor(Color.green);
+				else
+					g.setColor(Color.black);
 				g.fill(ObsPoly);
 			}
 			for (Ray r : l.rays) {
@@ -95,7 +101,7 @@ public class Runner extends BasicGame {
 			for (int i = 0; i < l.rays.size(); i++) {
 				Ray r = l.ray(i);
 				if (r.intersection == null) {
-					r.intersection=r.origin;
+					r.intersection = r.origin;
 				}
 				// ///////////PROBLEM HERE - RESPONSIBLE FOR RANDOM
 				// CRAHSES!!!!!!
@@ -109,11 +115,11 @@ public class Runner extends BasicGame {
 
 				Ray r = l.ray(i);
 
-				g.setColor(Color.blue);
-				g.drawLine(cXout((float) r.origin.getX()),
-						cYout((float) r.origin.getY()),
-						cXout((float) r.intersection.getX()),
-						cYout((float) r.intersection.getY()));
+				// g.setColor(Color.blue);
+				// g.drawLine(cXout((float) r.origin.getX()),
+				// cYout((float) r.origin.getY()),
+				// cXout((float) r.intersection.getX()),
+				// cYout((float) r.intersection.getY()));
 
 				Polygon poly = new Polygon();
 				Ray r2;
@@ -176,6 +182,19 @@ public class Runner extends BasicGame {
 		float x = cXin(in.getMouseX());
 		float y = cYin(in.getMouseY());
 		lights.get(0).setLocation(new Point2D.Float(x, y));
+		if (in.isKeyPressed(Input.KEY_G))
+			showObsInGreen = !showObsInGreen;
+		if (in.isKeyPressed(Input.KEY_0)) {
+			for (int i = 0; i < 30; i++) {
+
+				obs.add(new Obstructable(new Point2D[] {
+						new Point2D.Float(i * 20, 200),
+						new Point2D.Float(i * 20 + 10, 200),
+						new Point2D.Float(i * 20 + 10, 200 + 10),
+						new Point2D.Float(i * 20, 200 + 10) }));
+			}
+		}
+
 	}
 
 	ArrayList<Point2D> pressedPoints = new ArrayList<Point2D>();
