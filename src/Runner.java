@@ -115,11 +115,11 @@ public class Runner extends BasicGame {
 
 				Ray r = l.ray(i);
 
-				// g.setColor(Color.blue);
-				// g.drawLine(cXout((float) r.origin.getX()),
-				// cYout((float) r.origin.getY()),
-				// cXout((float) r.intersection.getX()),
-				// cYout((float) r.intersection.getY()));
+				 g.setColor(Color.white);
+				 g.drawLine(cXout((float) r.origin.getX()),
+				 cYout((float) r.origin.getY()),
+				 cXout((float) r.tip.getX()),
+				 cYout((float) r.tip.getY()));
 
 				Polygon poly = new Polygon();
 				Ray r2;
@@ -156,6 +156,17 @@ public class Runner extends BasicGame {
 			}
 			l.clearRays();
 		}
+		
+//		for (Obstructable o : obs)
+//		{
+//			Polygon poly = new Polygon();
+//			for (Point2D p : o.getVertices())
+//			{
+//				poly.addPoint(cXout((float)p.getX()), cYout((float)p.getY()));
+//			}
+//			g.setColor(Color.black);
+//			g.fill(poly);
+//		}
 
 	}
 
@@ -171,8 +182,6 @@ public class Runner extends BasicGame {
 		Ray testRay = new Ray(new Point2D.Float(50, 50), new Point2D.Float(51,
 				60));
 		Point2D intersection = testObs.rayIntersection1(testRay);
-		System.out.println("=================");
-		System.out.println(intersection);
 
 	}
 
