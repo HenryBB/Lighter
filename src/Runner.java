@@ -49,7 +49,7 @@ public class Runner extends BasicGame {
 
 	@Override
 	public void render(GameContainer arg0, Graphics g) throws SlickException {
-		
+
 		g.setColor(Color.black);
 		g.fillRect(0, 0, windowWidth, windowHeight);
 		for (Light l : lights) {
@@ -115,11 +115,11 @@ public class Runner extends BasicGame {
 
 				Ray r = l.ray(i);
 
-				 g.setColor(Color.white);
-				 g.drawLine(cXout((float) r.origin.getX()),
-				 cYout((float) r.origin.getY()),
-				 cXout((float) r.tip.getX()),
-				 cYout((float) r.tip.getY()));
+				g.setColor(Color.white);
+				g.drawLine(cXout((float) r.origin.getX()),
+						cYout((float) r.origin.getY()),
+						cXout((float) r.tip.getX()),
+						cYout((float) r.tip.getY()));
 
 				Polygon poly = new Polygon();
 				Ray r2;
@@ -156,17 +156,17 @@ public class Runner extends BasicGame {
 			}
 			l.clearRays();
 		}
-		
-//		for (Obstructable o : obs)
-//		{
-//			Polygon poly = new Polygon();
-//			for (Point2D p : o.getVertices())
-//			{
-//				poly.addPoint(cXout((float)p.getX()), cYout((float)p.getY()));
-//			}
-//			g.setColor(Color.black);
-//			g.fill(poly);
-//		}
+
+		// for (Obstructable o : obs)
+		// {
+		// Polygon poly = new Polygon();
+		// for (Point2D p : o.getVertices())
+		// {
+		// poly.addPoint(cXout((float)p.getX()), cYout((float)p.getY()));
+		// }
+		// g.setColor(Color.black);
+		// g.fill(poly);
+		// }
 
 	}
 
@@ -202,6 +202,23 @@ public class Runner extends BasicGame {
 						new Point2D.Float(i * 20 + 10, 200 + 10),
 						new Point2D.Float(i * 20, 200 + 10) }));
 			}
+		}
+		if (in.isKeyPressed(Input.KEY_1)) {
+			Point2D[] verts = new Point2D[100];
+			int ind = 0;
+			for (float theta = 0; theta < 10; theta += .1) {
+				Point2D p = new Point2D.Float(cXin((float) (400+100 * Math.cos(theta))),
+						cYin((float) (300+100 * Math.sin(theta))));
+				verts[ind] = p;
+				ind++;
+			}
+			int index = 0;
+			for (Point2D pt : verts) {
+				if (pt == null)
+					System.out.println(index);
+				index++;
+			}
+			obs.add(new Obstructable(verts));
 		}
 
 	}
